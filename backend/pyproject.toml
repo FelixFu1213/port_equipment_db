@@ -7,8 +7,8 @@ requires-python = ">=3.12"
 dependencies = [
     "faker>=38.2.0",
     "fastapi>=0.124.0",
-    "mysqlclient",
     "passlib[bcrypt]>=1.7.4",
+    "psycopg2-binary>=2.9.10",
     "pydantic>=2.12.5",
     "python-dotenv>=1.2.1",
     "python-jose[cryptography]>=3.5.0",

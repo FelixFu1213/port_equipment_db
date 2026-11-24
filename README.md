@@ -2,30 +2,30 @@
 
 > 一个现代化的港口设备管理系统，提供设备租赁、仓储管理、订单处理等全流程解决方案。
 
-## 📋 项目概述
+## 项目概述
 
 本项目是一个基于 Vue3 + FastAPI + MySQL 的港口设备租赁与仓储管理系统，旨在为港口作业设备提供高效的租赁、存储、维护和订单管理服务。
 
-## ✨ 主要功能
+## 主要功能
 
-### 🏢 设备管理
+### 设备管理
 - **设备信息管理**: 设备档案、分类、规格参数管理
 - **设备状态跟踪**: 在库、已出库、维修中、已报废等状态管理
 - **库存管理**: 实时库存监控、出入库记录
 - **维护保养**: 维修记录、保养计划、质保管理
 
-### 📋 租赁管理
+### 租赁管理
 - **客户管理**: 客户信息、信用评级管理
 - **租赁订单**: 订单创建、状态跟踪、费用计算
 - **租赁合同**: 合同管理、期限提醒、续租处理
 - **设备调度**: 设备分配、调度优化、资源利用率分析
 
-### 💰 财务管理
+### 财务管理
 - **计费管理**: 租金计算、费用明细、账单生成
 - **收款管理**: 收款记录、欠款提醒、财务报表
 - **成本分析**: 设备成本分析、收益统计
 
-### 📊 数据统计
+### 数据统计
 - **设备统计**: 设备利用率、故障率分析
 - **业务统计**: 租赁收入、客户分析、趋势预测
 - **可视化报表**: ECharts 图表展示、数据导出
@@ -34,7 +34,7 @@
 
 ![images](/Images/img2.png)
 
-## 🛠 技术栈
+## 技术栈
 
 ### 后端
 - **框架**: FastAPI 0.124+
@@ -60,7 +60,7 @@
 - **Git钩子**: Husky + lint-staged
 - **提交规范**: Commitlint
 
-## 🚀 快速开始
+## 快速开始
 
 ### 环境要求
 - Node.js >= 14.0.0
@@ -115,7 +115,7 @@ pnpm dev
 - 后端API: http://localhost:8000
 - API文档: http://localhost:8000/docs
 
-## 📁 项目结构
+## 项目结构
 
 ```
 port_equipment_db/
@@ -140,7 +140,7 @@ port_equipment_db/
 └── README.md              # 项目说明
 ```
 
-## 🔧 配置说明
+## 配置说明
 
 ### 数据库配置
 在 `backend/database.py` 中配置数据库连接信息：
@@ -169,7 +169,7 @@ NODE_ENV=production
 VITE_API_BASE_URL=https://your-domain.com/api
 ```
 
-## 📖 API 文档
+## API 文档
 
 启动后端服务后，访问 http://localhost:8000/docs 可查看完整的 API 文档。
 
@@ -183,7 +183,7 @@ VITE_API_BASE_URL=https://your-domain.com/api
 - `GET /api/customers` - 获取客户列表
 - `POST /api/customers` - 创建新客户
 
-## 🧪 测试
+## 测试
 
 ### 后端测试
 ```bash
@@ -197,7 +197,7 @@ cd web
 pnpm test
 ```
 
-## 📦 部署
+## 部署
 
 ### 后端部署
 ```bash
@@ -215,7 +215,7 @@ pnpm build
 # 部署到 dist/ 目录
 ```
 
-## 🤝 贡献指南
+## 贡献指南
 
 1. Fork 项目
 2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
@@ -234,18 +234,18 @@ pnpm build
 - `test:` 测试相关
 - `chore:` 构建工具或辅助工具的变动
 
-## 📄 许可证
+## 许可证
 
 本项目基于 [MIT License](LICENSE) 开源。
 
-## 🙏 致谢
+## 致谢
 
 - [Arco Design Vue](https://arco.design/vue/component/overview) - 优秀的 Vue3 组件库
 - [FastAPI](https://fastapi.tiangolo.com/) - 现代化的 Python Web 框架
 - [Vue.js](https://vuejs.org/) - 渐进式 JavaScript 框架
 - [SQLAlchemy](https://www.sqlalchemy.org/) - Python SQL 工具包
 
-## 📞 联系方式
+## 联系方式
 
 如有问题或建议，请通过以下方式联系：
 
@@ -255,4 +255,4 @@ pnpm build
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给个 Star！
+如果这个项目对你有帮助，请给个 Star！

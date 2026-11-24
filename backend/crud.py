@@ -44,8 +44,19 @@ def get_equipment_list(
     if category:
         query = query.filter(models.Equipment.category == category)
     if status:
-        query = query.filter(models.Equipment.status == status)
-    
+        status_map = {
+            "在库": "IN_STOCK", "available": "IN_STOCK", "IN_STOCK": "IN_STOCK",
+            "已出库": "OUT", "rented": "OUT", "OUT": "OUT",
+            "维修中": "MAINTENANCE", "maintenance": "MAINTENANCE", "MAINTENANCE": "MAINTENANCE",
+            "已报废": "SCRAPPED", "scrapped": "SCRAPPED", "SCRAPPED": "SCRAPPED",
+        }
+        status_value = status_map.get(status, status)
+        try:
+            query = query.filter(models.Equipment.status == models.EquipmentStatus(status_value))
+        except ValueError:
+            # 忽略无法识别的状态值，避免 PostgreSQL 枚举报错
+            pass
+
     total = query.count()
     items = query.order_by(models.Equipment.created_at.desc()).offset(skip).limit(limit).all()
     
@@ -78,14 +89,20 @@ def get_equipment_list_from_view(
             params['category'] = category
         
         if status:
-            # 转换状态值
+            # 转换前端状态值/中文值到数据库枚举名称
             status_map = {
-                "在库": "在库",
-                "已出库": "已出库",
-                "维修中": "维修中",
-                "available": "在库",
-                "rented": "已出库",
-                "maintenance": "维修中"
+                "在库": "IN_STOCK",
+                "已出库": "OUT",
+                "维修中": "MAINTENANCE",
+                "已报废": "SCRAPPED",
+                "available": "IN_STOCK",
+                "rented": "OUT",
+                "maintenance": "MAINTENANCE",
+                "scrapped": "SCRAPPED",
+                "IN_STOCK": "IN_STOCK",
+                "OUT": "OUT",
+                "MAINTENANCE": "MAINTENANCE",
+                "SCRAPPED": "SCRAPPED",
             }
             status_value = status_map.get(status, status)
             query += " AND status = :status"
@@ -1111,13 +1128,15 @@ def get_rental_analysis_stats(db: Session):
         months_list.append(month_date.strftime('%Y-%m'))
     
     # 查询每个月的订单数量
+    # PostgreSQL 使用 to_char 格式化日期
+    month_expr = func.to_char(models.LeaseOrder.created_at, 'YYYY-MM')
     period_stats = db.query(
-        func.date_format(models.LeaseOrder.created_at, '%Y-%m').label('month'),
+        month_expr.label('month'),
         func.count(models.LeaseOrder.order_id).label('count')
     ).filter(
         models.LeaseOrder.is_deleted == 0,
         models.LeaseOrder.created_at >= today - timedelta(days=365)  # 最近一年
-    ).group_by(func.date_format(models.LeaseOrder.created_at, '%Y-%m')).order_by('month').all()
+    ).group_by(month_expr).order_by('month').all()
     
     # 创建月份到数量的映射
     stats_dict = {month: count for month, count in period_stats}

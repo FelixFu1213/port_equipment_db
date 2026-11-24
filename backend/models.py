@@ -93,7 +93,7 @@ class Equipment(Base):
     last_maintenance_date = Column(Date)  # 最后维护日期
     serial_number = Column(String(100))  # 序列号
     created_at = Column(DateTime, default=datetime.now, server_default=text('CURRENT_TIMESTAMP'), nullable=False)
-    updated_at = Column(DateTime, default=datetime.now, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), onupdate=datetime.now, nullable=False)
+    updated_at = Column(DateTime, default=datetime.now, server_default=text('CURRENT_TIMESTAMP'), onupdate=datetime.now, nullable=False)
     is_deleted = Column(Integer, default=0)
 
     # 关系

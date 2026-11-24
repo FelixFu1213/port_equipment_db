@@ -1,0 +1,68 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: port-equipment-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-port_equipment_db}
+      TZ: Asia/Shanghai
+    ports:
+      # 仅本机可访问数据库，避免暴露到公网
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-port_equipment_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - appnet
+
+  backend:
+    build:
+      context: ./backend
+    container_name: port-equipment-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_NAME: ${POSTGRES_DB:-port_equipment_db}
+      DB_ECHO: "false"
+      DB_WAIT_SECONDS: "90"
+      TZ: Asia/Shanghai
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - uploads:/app/uploads
+    networks:
+      - appnet
+
+  frontend:
+    build:
+      context: ./web
+    container_name: port-equipment-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    networks:
+      - appnet
+
+volumes:
+  pgdata:
+    name: port-equipment-pgdata
+  uploads:
+    name: port-equipment-uploads
+
+networks:
+  appnet:
+    name: port-equipment-net

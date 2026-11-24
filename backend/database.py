@@ -1,28 +1,37 @@
+import os
 from urllib.parse import quote_plus
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# 数据库连接信息
-DB_USER = 'root'
-DB_PASSWORD = '123456'
-DB_HOST = '127.0.0.1'
-DB_PORT = 3306
-DB_NAME = 'port_equipment_db'
+load_dotenv()
+
+# 数据库连接信息（优先使用环境变量，便于 Docker / 生产环境部署）
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "postgres")
+DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
+DB_PORT = int(os.getenv("DB_PORT", "5432"))
+DB_NAME = os.getenv("DB_NAME", "port_equipment_db")
+SQL_ECHO = os.getenv("DB_ECHO", "false").lower() in ("1", "true", "yes", "on")
 
 # 对用户名和密码进行 URL 编码，处理特殊字符
 encoded_user = quote_plus(DB_USER)
 encoded_password = quote_plus(DB_PASSWORD)
 
-# 创建数据库连接 URL
-DATABASE_URL = f"mysql+mysqldb://{encoded_user}:{encoded_password}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# 创建数据库连接 URL（PostgreSQL）
+DATABASE_URL = os.getenv("DATABASE_URL") or (
+    f"postgresql+psycopg2://{encoded_user}:{encoded_password}"
+    f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+)
 
 # 创建引擎
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
     pool_recycle=3600,
-    echo=True  # 开发环境打印SQL，生产环境设为False
+    echo=SQL_ECHO,  # 开发环境可通过 DB_ECHO=true 打印 SQL
 )
 
 # 创建会话
@@ -39,4 +48,3 @@ def get_db():
         yield db
     finally:
         db.close()
-

@@ -12,7 +12,10 @@ export default mergeConfig(
       configCompressPlugin('gzip'),
       configVisualizerPlugin(),
       configArcoResolverPlugin(),
-      configImageminPlugin(),
+      // 图片压缩依赖平台二进制，CI/Docker 构建时可通过 ENABLE_IMAGEMIN=false 关闭
+      ...(process.env.ENABLE_IMAGEMIN === 'false'
+        ? []
+        : [configImageminPlugin()]),
     ],
     build: {
       rollupOptions: {

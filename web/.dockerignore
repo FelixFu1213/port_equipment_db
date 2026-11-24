@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-ssr/
+.git/
+.gitignore
+.husky/
+.eslintcache
+*.local
+.env.local
+.env.*.local
+Dockerfile
+.dockerignore
+README.md
+NAVBAR_FEATURES.md
+QUICK_START.md
+setup-env.bat
